@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace HangaGubbe
         private string secretWord;
         List<string> incorrectGuesses = new List<string>();
         List<string> maskedSecretWord = new List<string>();
+        private int correctLetterCounter = 0;
 
         public Hangman()
         {
@@ -55,6 +57,7 @@ namespace HangaGubbe
             }
         }
 
+        //6 different states of the Hangman
         private void RitaGubbe1()
         {
             Console.WriteLine("#############################");
@@ -149,7 +152,20 @@ namespace HangaGubbe
             
             while (lives !=0)
             {
-                Console.WriteLine("Gissa en bokstav: ");
+                if (correctLetterCounter == secretWord.Length)
+                {
+                    Console.WriteLine("Du har vunnit!");
+                    break;
+                }
+
+                CheckLives();
+                
+                foreach (var letter in maskedSecretWord)
+                {
+                    Console.Write(letter);
+                }
+                
+                Console.WriteLine("\nGissa en bokstav: ");
                 string? input = Console.ReadLine();
                 if(input == null)
                 {
@@ -158,20 +174,33 @@ namespace HangaGubbe
                 }
                 else
                 {
-
+                    HandleUserInput(input); 
                 }
+
             }
         }
 
-        //
+        //Takes in the input from the user and matches it to matching letters in the secret word. if the guess is incorrect, it gets added to the incorrect guesses array
         private void HandleUserInput(string userInput)
         {
+            bool isCorrectGuess = false;
             for (int i = 0; i < secretWord.Length; i++)
             {
-                if (userInput.Equals(secretWord[i]))
+                if (userInput == secretWord[i].ToString())
                 {
-
+                    maskedSecretWord[i] = userInput;
+                    isCorrectGuess = true;
+                    correctLetterCounter++;
                 }
+                else
+                {
+                    continue;
+                }
+            }
+            if (!isCorrectGuess)
+            {
+               incorrectGuesses.Add(userInput);
+               lives--;
             }
         }
 
