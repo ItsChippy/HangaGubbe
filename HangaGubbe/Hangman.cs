@@ -10,7 +10,6 @@ namespace HangaGubbe
     internal class Hangman
     {
         private int lives = 5;
-        private string[] words = new string[10] { "sko", "bok", "ryggsäck", "byxor", "penna", "människa", "apelsin", "gul", "jacka", "lampa" };
         private string secretWord;
         List<string> incorrectGuesses = new List<string>();
         List<string> maskedSecretWord = new List<string>();
@@ -18,132 +17,27 @@ namespace HangaGubbe
 
         public Hangman()
         {
-            Random randomNr = new Random();
-            int wordListIndex = randomNr.Next(words.Length);
-            secretWord = words[wordListIndex];
-            
-            for (int i = 0; i < secretWord.Length;i++)
+            secretWord = GenerateSecretWord();
+
+            for (int i = 0; i < secretWord.Length; i++)
             {
                 maskedSecretWord.Add("_");
             }
         }
 
-        //Checks players' lives and prints the corresponding image.
-        private void CheckLives()
+        private string GenerateSecretWord()
         {
-            if (lives == 5)
-            {
-                RitaGubbe1();
-            }
-            else if (lives == 4)
-            {
-                RitaGubbe2();
-            }
-            else if (lives == 3)
-            {
-                RitaGubbe3();
-            }
-            else if (lives == 2)
-            {
-                RitaGubbe4();
-            }
-            else if (lives == 1) 
-            {
-                RitaGubbe5();
-            }
-            else
-            {
-                RitaGubbe6();
-            }
+            string[] wordList = {
+                "buss", "ägg", "blomma", "katt", "kratta",
+                "byxor", "lampa", "bok", "stol", "bord"
+            };
+            Random rand = new Random();
+            int index = rand.Next(wordList.Length);
+            return wordList[index];
         }
 
-        //6 different states of the Hangman
-        private void RitaGubbe1()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
 
-        }
-
-        private void RitaGubbe2()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-
-        }
-
-        private void RitaGubbe3()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#                           #");
-            Console.WriteLine("#                           #");
-        }
-
-        private void RitaGubbe4()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#       ###########         #");
-        }
-
-        private void RitaGubbe5()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#       ###########         #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-
-        }
-
-        private void RitaGubbe6()
-        {
-            Console.WriteLine("#############################");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#          #####            #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#       ###########         #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#            #              #");
-            Console.WriteLine("#           ###             #");
-            Console.WriteLine("#          #   #            #");
-            Console.WriteLine("#         #     #           #");
-            Console.WriteLine("#        #       #          #");
-            Console.WriteLine("#                           #");
-
-
-        }
-
+        //Main method that displays the game and progress
         public void PlayGame()
         {
             Console.WriteLine("Välkommen till hänga gubbe!");
@@ -213,5 +107,162 @@ namespace HangaGubbe
                 Console.Write(index);
             }
         }
+
+        //6 different states of the Hangman
+        private void RitaGubbe1()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+
+        }
+
+        private void RitaGubbe2()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+
+        }
+
+        private void RitaGubbe3()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+        }
+
+        private void RitaGubbe4()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#       ###########         #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+        }
+
+        private void RitaGubbe5()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#       ###########         #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+
+        }
+
+        private void RitaGubbe6()
+        {
+            Console.WriteLine("#############################");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#          #####            #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#       ###########         #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#            #              #");
+            Console.WriteLine("#           ###             #");
+            Console.WriteLine("#          #   #            #");
+            Console.WriteLine("#         #     #           #");
+            Console.WriteLine("#        #       #          #");
+            Console.WriteLine("#                           #");
+            Console.WriteLine("#############################");
+
+
+        }
+
+        //Checks players' lives and prints the corresponding image.
+        private void CheckLives()
+        {
+            if (lives == 5)
+            {
+                RitaGubbe1();
+            }
+            else if (lives == 4)
+            {
+                RitaGubbe2();
+            }
+            else if (lives == 3)
+            {
+                RitaGubbe3();
+            }
+            else if (lives == 2)
+            {
+                RitaGubbe4();
+            }
+            else if (lives == 1)
+            {
+                RitaGubbe5();
+            }
+            else
+            {
+                RitaGubbe6();
+            }
+        }
+
+
     }
 }
