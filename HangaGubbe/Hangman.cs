@@ -126,6 +126,7 @@ namespace HangaGubbe
                 CheckLives();
                 DisplayScore();
 
+                Console.Write("\nEnter a letter to guess: ");
                 string? input = Console.ReadLine();
                 if (input == null)
                 {
@@ -167,7 +168,6 @@ namespace HangaGubbe
                 Console.Write(letter);
             }
 
-            Console.Write("\nEnter a letter to guess: ");
         }
 
 
@@ -319,6 +319,7 @@ namespace HangaGubbe
             else if (lives == 3)
             {
                 RitaGubbe3();
+
             }
             else if (lives == 2)
             {
