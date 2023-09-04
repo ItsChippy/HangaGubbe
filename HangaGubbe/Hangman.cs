@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace HangaGubbe
 {
@@ -11,98 +12,51 @@ namespace HangaGubbe
     {
         private int lives = 5;
         private string secretWord;
+        private int[] letterIdentifier;
+        List<string> wordList = new List<string>(){"buss", "ägg", "blomma", "katt", "kratta", "byxor", "lampa", "bok", "stol", "bord"};
         List<string> incorrectGuesses = new List<string>();
-        List<string> maskedSecretWord = new List<string>();
         private int correctLetterCounter = 0;
 
         public Hangman()
         {
-            secretWord = GenerateSecretWord();
-
-            for (int i = 0; i < secretWord.Length; i++)
-            {
-                maskedSecretWord.Add("_");
-            }
         }
 
         private string GenerateSecretWord()
         {
-            string[] wordList = {
-                "buss", "ägg", "blomma", "katt", "kratta",
-                "byxor", "lampa", "bok", "stol", "bord"
-            };
+
             Random rand = new Random();
-            int index = rand.Next(wordList.Length);
+            int index = rand.Next(wordList.Count);
             return wordList[index];
         }
 
-
-        //Main method that displays the game and progress
-        public void PlayGame()
+        // Fill letteridentifiers with the value 0, implying letter not found
+        private int[] GenerateLetterIdentifier()
         {
-            Console.WriteLine("Välkommen till hänga gubbe!");
-            Console.WriteLine("Tryck enter för att fortsätta..");
-            Console.ReadLine();
+            letterIdentifier = new int[secretWord.Length];
 
-            while (lives != 0)
+            for (int i = 0; i < secretWord.Length; i++)
             {
-                if (correctLetterCounter == secretWord.Length)
-                {
-                    Console.WriteLine($"Du har vunnit! Ordet var '{secretWord}' ");
-                    break;
-                }
-
-                Console.Clear();
-
-                CheckLives();
-                DisplayScore();
-
-                string? input = Console.ReadLine();
-                if (input == null)
-                {
-                    Console.WriteLine("Gissa igen");
-                    continue;
-                }
-                else
-                {
-                    HandleUserInput(input);
-                }
-
+                letterIdentifier[i] = 0;
             }
+
+            return letterIdentifier;
         }
-
-        //Method to display wrong guesses, correct guesses and input prompt
-        private void DisplayScore()
-        {
-            foreach (var letter in maskedSecretWord)
-            {
-                Console.Write(letter);
-            }
-
-            // Add newline between correct and incorrect guesses
-            Console.WriteLine();
-
-            // Write wrong guesses to screen
-            foreach(var letter in incorrectGuesses)
-            {
-                Console.Write(letter);
-            }
-
-            Console.Write("\nGissa en bokstav: ");
-
-
-        }
-
 
         //Takes in the input from the user and matches it to matching letters in the secret word. if the guess is incorrect, it gets added to the incorrect guesses array
         private void HandleUserInput(string userInput)
         {
             bool isCorrectGuess = false;
+            if (CheckDoubleGuess(userInput)) // Checks if the guessed letter has been entered previously
+            {
+                Console.WriteLine($"You have already guessed the letter {userInput}!");
+                Thread.Sleep(3000);
+                return;
+            }
             for (int i = 0; i < secretWord.Length; i++)
             {
                 if (userInput == secretWord[i].ToString())
                 {
-                    maskedSecretWord[i] = userInput;
+                    letterIdentifier[i] = 1; // mark current letter as found
                     isCorrectGuess = true;
                     correctLetterCounter++;
                 }
@@ -113,19 +67,116 @@ namespace HangaGubbe
             }
             if (!isCorrectGuess)
             {
-               incorrectGuesses.Add(userInput);
-               lives--;
+                incorrectGuesses.Add(userInput);
+                lives--;
             }
         }
 
-        //Debug method
-        public void GetWord()
+        private bool CheckDoubleGuess(string inputLetter)
         {
-            Console.WriteLine(secretWord);
-            foreach (var index in maskedSecretWord)
+            bool isDoubleGuess = false;
+
+            for (int i = 0; i < letterIdentifier.Length; i++)
             {
-                Console.Write(index);
+                if(inputLetter == secretWord[i].ToString() && letterIdentifier[i] == 1)
+                {
+                    isDoubleGuess = true;
+                    break;
+                }
             }
+            for (int i = 0; i < incorrectGuesses.Count(); i++)
+            {
+                if (inputLetter == incorrectGuesses[i])
+                {
+                    isDoubleGuess = true;
+                    break;
+                }
+            }
+
+            return isDoubleGuess;
+        }
+
+
+        //Main method that displays the game and progress
+        public void PlayGame()
+        {
+            Console.WriteLine("Welcome to Hangman!");
+            Console.WriteLine("Enter custom word or 'start' to play.");
+            string userInput = Console.ReadLine();
+
+            while (userInput.ToLower() != "start")
+            {
+                wordList.Add(userInput);
+                userInput = Console.ReadLine();
+            }
+            secretWord = GenerateSecretWord();
+            letterIdentifier = GenerateLetterIdentifier();
+
+            while (lives != 0)
+            {
+                Console.Clear();
+                if (correctLetterCounter == secretWord.Length)
+                {
+                    CheckLives();
+                    DisplayScore();
+                    Console.WriteLine($"You win! The word was '{secretWord}' :) ");
+                    break;
+                }
+                
+                CheckLives();
+                DisplayScore();
+
+                string? input = Console.ReadLine();
+                if (input == null)
+                {
+                    Console.WriteLine("Guess again");
+                    continue;
+                }
+
+                HandleUserInput(input);
+            }
+            if (lives == 0)
+            {
+                Console.WriteLine($"You lose! The word was '{secretWord}' :(");
+            }
+        }
+
+        /// <summary>
+        /// Method to display wrong guesses, correct guesses and input prompt
+        /// </summary>
+        private void DisplayScore()
+        {
+            for (int i = 0; i < letterIdentifier.Length; i++)
+            {
+                if (letterIdentifier[i] == 1)
+                {
+                    Console.Write(secretWord[i].ToString() + " ");
+                }
+                else
+                {
+                    Console.Write("_" + " ");
+                }
+            }
+
+            // Add newline between correct and incorrect guesses
+            Console.WriteLine();
+
+            // Write wrong guesses to screen
+            foreach (var letter in incorrectGuesses)
+            {
+                Console.Write(letter);
+            }
+
+            Console.Write("\nEnter a letter to guess: ");
+        }
+
+
+       
+
+        //Debug method
+        public void Debugging()
+        {
+            //write test code here
         }
 
         //6 different states of the Hangman
