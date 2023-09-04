@@ -43,36 +43,56 @@ namespace HangaGubbe
             Console.WriteLine("Välkommen till hänga gubbe!");
             Console.WriteLine("Tryck enter för att fortsätta..");
             Console.ReadLine();
-            
-            while (lives !=0)
+
+            while (lives != 0)
             {
                 if (correctLetterCounter == secretWord.Length)
                 {
-                    Console.WriteLine("Du har vunnit!");
+                    Console.WriteLine($"Du har vunnit! Ordet var '{secretWord}' ");
                     break;
                 }
 
+                Console.Clear();
+
                 CheckLives();
-                
-                foreach (var letter in maskedSecretWord)
-                {
-                    Console.Write(letter);
-                }
-                
-                Console.WriteLine("\nGissa en bokstav: ");
+                DisplayScore();
+
                 string? input = Console.ReadLine();
-                if(input == null)
+                if (input == null)
                 {
                     Console.WriteLine("Gissa igen");
                     continue;
                 }
                 else
                 {
-                    HandleUserInput(input); 
+                    HandleUserInput(input);
                 }
 
             }
         }
+
+        //Method to display wrong guesses, correct guesses and input prompt
+        private void DisplayScore()
+        {
+            foreach (var letter in maskedSecretWord)
+            {
+                Console.Write(letter);
+            }
+
+            // Add newline between correct and incorrect guesses
+            Console.WriteLine();
+
+            // Write wrong guesses to screen
+            foreach(var letter in incorrectGuesses)
+            {
+                Console.Write(letter);
+            }
+
+            Console.Write("\nGissa en bokstav: ");
+
+
+        }
+
 
         //Takes in the input from the user and matches it to matching letters in the secret word. if the guess is incorrect, it gets added to the incorrect guesses array
         private void HandleUserInput(string userInput)
