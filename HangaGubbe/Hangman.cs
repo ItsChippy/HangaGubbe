@@ -11,16 +11,15 @@ namespace HangaGubbe
     internal class Hangman
     {
         private int lives = 5;
-        private string secretWord;
+        private string secretWord = "";
         private int[] letterIdentifier;
         List<string> wordList = new List<string>(){"buss", "ägg", "blomma", "katt", "kratta", "byxor", "lampa", "bok", "stol", "bord"};
         List<string> incorrectGuesses = new List<string>();
         private int correctLetterCounter = 0;
 
-        public Hangman()
-        {
-        }
-
+        /// <summary>
+        /// Generates a new secret word.
+        /// </summary>
         private string GenerateSecretWord()
         {
 
@@ -29,7 +28,9 @@ namespace HangaGubbe
             return wordList[index];
         }
 
-        // Fill letteridentifiers with the value 0, implying letter not found
+        /// <summary>
+        /// Fill letteridentifiers array with the value 0, implying letter not found.
+        /// </summary>
         private int[] GenerateLetterIdentifier()
         {
             letterIdentifier = new int[secretWord.Length];
@@ -42,7 +43,10 @@ namespace HangaGubbe
             return letterIdentifier;
         }
 
-        //Takes in the input from the user and matches it to matching letters in the secret word. if the guess is incorrect, it gets added to the incorrect guesses array
+        /// <summary>
+        /// Match user input with secret word letters.
+        /// If the guess is incorrect add it to the incorrect guesses array.
+        /// </summary>
         private void HandleUserInput(string userInput)
         {
             bool isCorrectGuess = false;
@@ -60,10 +64,6 @@ namespace HangaGubbe
                     isCorrectGuess = true;
                     correctLetterCounter++;
                 }
-                else
-                {
-                    continue;
-                }
             }
             if (!isCorrectGuess)
             {
@@ -72,6 +72,9 @@ namespace HangaGubbe
             }
         }
 
+        /// <summary>
+        /// Check for double guesses in correct and incorrect guesses.
+        /// </summary>
         private bool CheckDoubleGuess(string inputLetter)
         {
             bool isDoubleGuess = false;
@@ -97,14 +100,16 @@ namespace HangaGubbe
         }
 
 
-        //Main method that displays the game and progress
+        /// <summary>
+        /// Game loop that displays the current game
+        /// </summary>
         public void PlayGame()
         {
             Console.WriteLine("Welcome to Hangman!");
             Console.WriteLine("Enter custom word or 'start' to play.");
-            string userInput = Console.ReadLine();
+            string? userInput = Console.ReadLine();
 
-            while (userInput.ToLower() != "start")
+            while (userInput.ToLower() != "start") //checks for the word "start" in order to start the game
             {
                 wordList.Add(userInput);
                 userInput = Console.ReadLine();
@@ -112,18 +117,19 @@ namespace HangaGubbe
             secretWord = GenerateSecretWord();
             letterIdentifier = GenerateLetterIdentifier();
 
-            while (lives != 0)
+            while (lives > 0) //Main gameplay loop
             {
                 Console.Clear();
-                if (correctLetterCounter == secretWord.Length)
+
+                if (correctLetterCounter == secretWord.Length) //checks the win condition
                 {
-                    CheckLives();
+                    DrawHangman();
                     DisplayScore();
-                    Console.WriteLine($"You win! The word was '{secretWord}' :) ");
+                    Console.WriteLine($"\nYou win! The word was '{secretWord}' :) ");
                     break;
                 }
-                
-                CheckLives();
+
+                DrawHangman();
                 DisplayScore();
 
                 Console.Write("\nEnter a letter to guess: ");
@@ -136,9 +142,9 @@ namespace HangaGubbe
 
                 HandleUserInput(input);
             }
-            if (lives == 0)
+            if (lives == 0) //Checks if user has lost and displays a message
             {
-                Console.WriteLine($"You lose! The word was '{secretWord}' :(");
+                Console.WriteLine($"\nYou lose! The word was '{secretWord}' :(");
             }
         }
 
@@ -170,17 +176,10 @@ namespace HangaGubbe
 
         }
 
-
-       
-
-        //Debug method
-        public void Debugging()
-        {
-            //write test code here
-        }
-
-        //6 different states of the Hangman
-        private void RitaGubbe1()
+        /// <summary>
+        /// The different states of the hangman
+        /// </summary>
+        private void DrawHangmanBox()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#                           #");
@@ -201,7 +200,7 @@ namespace HangaGubbe
 
         }
 
-        private void RitaGubbe2()
+        private void DrawHangmanRope()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#            #              #");
@@ -222,7 +221,7 @@ namespace HangaGubbe
 
         }
 
-        private void RitaGubbe3()
+        private void DrawHangmanHead()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#            #              #");
@@ -242,7 +241,7 @@ namespace HangaGubbe
             Console.WriteLine("#############################");
         }
 
-        private void RitaGubbe4()
+        private void DrawHangmanArms()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#            #              #");
@@ -262,7 +261,7 @@ namespace HangaGubbe
             Console.WriteLine("#############################");
         }
 
-        private void RitaGubbe5()
+        private void DrawHangmanBody()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#            #              #");
@@ -283,7 +282,7 @@ namespace HangaGubbe
 
         }
 
-        private void RitaGubbe6()
+        private void DrawHangmanLegs()
         {
             Console.WriteLine("#############################");
             Console.WriteLine("#            #              #");
@@ -305,33 +304,35 @@ namespace HangaGubbe
 
         }
 
-        //Checks players' lives and prints the corresponding image.
-        private void CheckLives()
+        /// <summary>
+        /// Check player's lives and draw the corresponding picture
+        /// </summary>
+        private void DrawHangman()
         {
             if (lives == 5)
             {
-                RitaGubbe1();
+                DrawHangmanBox();
             }
             else if (lives == 4)
             {
-                RitaGubbe2();
+                DrawHangmanRope();
             }
             else if (lives == 3)
             {
-                RitaGubbe3();
+                DrawHangmanHead();
 
             }
             else if (lives == 2)
             {
-                RitaGubbe4();
+                DrawHangmanArms();
             }
             else if (lives == 1)
             {
-                RitaGubbe5();
+                DrawHangmanBody();
             }
             else
             {
-                RitaGubbe6();
+                DrawHangmanLegs();
             }
         }
 
